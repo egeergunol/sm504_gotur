@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GOTUR</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
+    <th:block th:include="/_header"></th:block>
+</head>
+<style>
+
+</style>
+<body>
+
+<th:block th:include="/_menu"></th:block>
+
+<div class="container cart_bag">
+    <h2 style="font-weight: bold;">CART</h2>
+    <div class="row">
+        <div class="col-lg-8 col-sm-8 col-xs-12">
+
+            <th:block th:if="${cartForm == null || cartForm.cartLines == null || cartForm.cartLines.empty}">
+                <h2>Your cart is empty!</h2>
+                <a class="btn btn-dark" th:href="@{/productList}">Show Product List</a>
+            </th:block>
+
+            <table class="table">
+
+                <th:block th:if="${cartForm != null && cartForm.cartLines != null && !cartForm.cartLines.empty}">
+                    <form method="POST" th:object="${cartForm}" th:action="@{/shoppingCart}">
+
+                        <div class="product-preview-container"
+                             th:each="cartLineInfo, varStatus : ${cartForm.cartLines}">
+                            <tr>
+                                <td><img th:src="@{|/productImage?code=${cartLineInfo.productInfo.code}|}"
+                                         width="190px"></td>
+                                <td>
+                                    <b style="color: #000;font-size:16px; font-weight: 600"
+                                       th:utext="${cartLineInfo.productInfo.name}"></b>
+                                    <p style="font-size: 14px;">
+                                        PRICE: <span th:utext="${cartLineInfo.productInfo.unitPrice}"></span>
+                                    </p>
+
+
+                                    <input type="hidden"
+                                           th:name="|cartLines[${varStatus.index}].productInfo.code|"
+                                           th:value="${cartLineInfo.productInfo.code}"/>
+                                    <a th:href="@{|/shoppingCartRemoveProduct?code=${cartLineInfo.productInfo.code}|}"
+                                       class="btn-dark btn" style="margin-right: 10px;"> Remove</a>
+                                </td>
+                                <td class="d-flex align-items-center justify-content-center container">
+                                    <a th:href="@{/updateQuantity(code=${cartLineInfo.productInfo.code}, operation='decrease')}"
+                                       class="btn btn-dark" style="width: 35px; height: 35px;">-</a>
+
+                                    <input disabled type="number" th:name="|cartLines[${varStatus.index}].quantity|"
+                                           th:value="${cartLineInfo.quantity}" style="width: 35px; height: 35px;">
+
+                                    <a th:href="@{/updateQuantity(code=${cartLineInfo.productInfo.code}, operation='increase')}"
+                                       class="btn btn-dark" style="width: 35px; height: 35px;">+</a>
+                                </td>
+                                <td>₺<span th:utext="${cartLineInfo.amount}"></span></td>
+                            </tr>
+                        </div>
+
+                        <tr>
+                            <td colspan="7">
+                                <a th:href="@{/}" class="btn btn-dark">Continue Shopping</a>
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+
+                    </form>
+                </th:block>
+            </table>
+        </div> <!-- -----col-lg-8 col-sm-8 col-xs-12 end --- -->
+        <div class="col-lg-4 col-sm-4 col-xs-12">
+            <h5 style="font-weight: bold;">SUMMARY</h5>
+            <table class="table cart-subtotal">
+                <tr>
+                    <td>
+                        Subtotal <br><br>
+                        Quantity <br><br>
+                        Courier Fee<br><br>
+                    </td>
+                    <td>
+                        ₺<span th:utext="${myCart.amountTotal}"></span><br><br>
+                        [<span th:utext="${myCart.quantityTotal}"></span> ITEMS]<br><br>
+                        FREE<br><br>
+                    </td>
+
+                <tr>
+                    <td><b>TOTAL</b></td>
+                    <td><b>₺<span th:utext="${myCart.amountTotal}"></span></b></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- ------------------------------footer end---------------------------------- -->
+
+
+<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>
