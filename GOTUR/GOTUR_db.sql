@@ -55,15 +55,16 @@
       `CUSTOMER_NAME` varchar(255) COLLATE latin1_general_ci NOT NULL,
       `CUSTOMER_PHONE` varchar(128) COLLATE latin1_general_ci NOT NULL,
       `ORDER_DATE` datetime NOT NULL,
-      `ORDER_NUM` int(11) NOT NULL
+      `ORDER_NUM` int(11) NOT NULL,
+      `ORDER_STATUS` int(1) NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
     --
     -- Dumping data for table `orders`
     --
 
-    INSERT INTO `orders` (`ID`, `TOTAL_AMOUNT`, `CUSTOMER_ADDRESS`, `CUSTOMER_EMAIL`, `CUSTOMER_NAME`, `CUSTOMER_PHONE`, `ORDER_DATE`, `ORDER_NUM`) VALUES
-    ('b5ba86bd-144d-4a85-9563-3c373b216efe', 65, 'Some Address', 'ege@gmail.com', 'ege', '123123123', '2022-04-22 21:40:56', 1);
+    INSERT INTO `orders` (`ID`, `TOTAL_AMOUNT`, `CUSTOMER_ADDRESS`, `CUSTOMER_EMAIL`, `CUSTOMER_NAME`, `CUSTOMER_PHONE`, `ORDER_DATE`, `ORDER_NUM`, `ORDER_STATUS`) VALUES
+    ('b5ba86bd-144d-4a85-9563-3c373b216efe', 65, 'Some Address', 'ege@gmail.com', 'ege', '123123123', '2022-04-22 21:40:56', 1, 0);
 
     -- --------------------------------------------------------
 

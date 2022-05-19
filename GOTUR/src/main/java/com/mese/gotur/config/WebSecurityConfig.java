@@ -36,20 +36,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Requires login with role ROLE_STORE_MANAGER, ROLE_CUSTOMER or ROLE_COURIER.
         // If not, it will redirect to /admin/login.
-        http.authorizeRequests().antMatchers("/admin/orderList", "/admin/order", "/admin/accountInfo")//
+        http.authorizeRequests().antMatchers("/admin/orderList", "/admin/order")//
                 .access("hasAnyRole('ROLE_STORE_MANAGER', 'ROLE_CUSTOMER', 'ROLE_COURIER')");
 
+        // Pages only for STORE MANAGER
+        http.authorizeRequests().antMatchers("/admin/product").access("hasRole('ROLE_STORE_MANAGER')");
+        http.authorizeRequests().antMatchers("/admin/productRemove").access("hasRole('ROLE_STORE_MANAGER')");
+
+        // When user login, role XX.
+        // But access to the page requires the YY role,
         // An AccessDeniedException will be thrown.
         http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
         // Configuration for Login Form.
-        http.authorizeRequests().and().formLogin()
+        http.authorizeRequests().and().formLogin()//
+
+                //
                 .loginProcessingUrl("/j_spring_security_check") // Submit URL
-                .loginPage("/admin/login")
-                .defaultSuccessUrl("/admin/accountInfo")
-                .failureUrl("/admin/login?error=true")
-                .usernameParameter("userName")
+                .loginPage("/admin/login")//
+                .defaultSuccessUrl("/productList")//
+                .failureUrl("/admin/login?error=true")//
+                .usernameParameter("userName")//
                 .passwordParameter("password")
+
+                // Configuration for the Logout page.
+                // (After logout, go to home page)
                 .and().logout().logoutUrl("/admin/logout").logoutSuccessUrl("/");
 
     }

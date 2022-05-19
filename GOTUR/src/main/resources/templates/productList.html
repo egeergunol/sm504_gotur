@@ -28,17 +28,23 @@
                     <div class="">
                         <div class="display">
                             <img th:src="@{|/productImage?code=${prodInfo.code}|}" alt="..."
-                                 class="product-image">
+                                class="product-image" >
                             <div class="box" th:with="selectedQuantity = 1">
                                 <p style="font-size:13px;"><span th:utext="${prodInfo.name}"></span><br>
                                     ₺<span th:utext="${prodInfo.unitPrice}"></span>
                                 </p>
 
-                                <a th:href="@{/buyProduct(code=${prodInfo.code},quantity=${selectedQuantity})}"
-                                   class="btn btn-dark">Add
+<!--                                <input class="btn btn-dark btn-fixed" type="submit" value="-"/>-->
+<!--                                <input class="btn-fixed" disabled type="text" value="1" >-->
+<!--                                <input class="btn btn-dark btn-fixed" type="submit" value="+"/>-->
+
+                                <a th:href="@{/buyProduct(code=${prodInfo.code},quantity=${selectedQuantity})}" class="btn btn-dark">Add
                                     to Cart</a>
-                                <a class="btn btn-warn" th:href="@{|/admin/product?code=${prodInfo.code}|}">Edit
-                                    Product</a>
+
+                                <!-- For Manager edit Product -->
+                                <th:block sec:authorize="hasAuthority('ROLE_STORE_MANAGER')">
+                                    <a class="btn btn-warn" th:href="@{|/admin/product?code=${prodInfo.code}|}">Edit Product</a>
+                                </th:block>
                             </div>
                         </div>
 
@@ -64,7 +70,7 @@
                 <th:block th:each="page : ${paginationProducts.navigationPages}">
 
                     <a th:href="@{|/productList?page=${page}|}" th:if="${page != -1}"
-                       class="btn btn-dark" style="border-radius: 0%; margin:10px;" th:utext="${page}"></a>
+                       class="btn btn-dark" style="border-radius: 0%; margin:2px;" th:utext="${page}"></a>
 
                     <span class="btn btn-dark" style="border-radius: 0%; margin:2px;" th:if="${page == -1}"> ... </span>
 

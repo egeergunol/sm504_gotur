@@ -5,10 +5,30 @@ import java.util.List;
 
 public class CartInfo {
 
+    private int orderNum;
+
+    private CustomerInfo customerInfo;
+
     private final List<CartLineInfo> cartLines = new ArrayList<>();
 
     public CartInfo() {
 
+    }
+
+    public int getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(int orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public CustomerInfo getCustomerInfo() {
+        return customerInfo;
+    }
+
+    public void setCustomerInfo(CustomerInfo customerInfo) {
+        this.customerInfo = customerInfo;
     }
 
     public List<CartLineInfo> getCartLines() {
@@ -70,6 +90,10 @@ public class CartInfo {
 
     public boolean isEmpty() {
         return this.cartLines.isEmpty();
+    }
+
+    public boolean isValidCustomer() {
+        return this.customerInfo != null && this.customerInfo.isValid();
     }
 
     public int getQuantityTotal() {
