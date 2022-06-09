@@ -122,9 +122,9 @@ public class OrderDAO {
         return query.getResultList();
     }
 
-    public void fulfillOrder(String orderId) {
+    public void fulfillOrder(String orderId, int orderStatusToBeUpdated) {
         Order order = this.findOrder(orderId);
-        order.setOrderStatus(1);
+        order.setOrderStatus(orderStatusToBeUpdated);
         Session session = this.sessionFactory.getCurrentSession();
         session.persist(order);
     }

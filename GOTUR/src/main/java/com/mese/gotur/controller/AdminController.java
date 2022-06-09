@@ -1,17 +1,18 @@
 package com.mese.gotur.controller;
 
+import com.mese.gotur.dao.AccountDAO;
 import com.mese.gotur.dao.OrderDAO;
 import com.mese.gotur.dao.ProductDAO;
 import com.mese.gotur.entity.Product;
+import com.mese.gotur.form.AccountForm;
 import com.mese.gotur.form.ProductForm;
 import com.mese.gotur.model.OrderDetailInfo;
 import com.mese.gotur.model.OrderInfo;
 import com.mese.gotur.pagination.PaginationResult;
+import com.mese.gotur.validator.AccountFormValidator;
 import com.mese.gotur.validator.ProductFormValidator;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -35,7 +35,13 @@ public class AdminController {
     private ProductDAO productDAO;
 
     @Autowired
+    private AccountDAO accountDAO;
+
+    @Autowired
     private ProductFormValidator productFormValidator;
+
+    @Autowired
+    private AccountFormValidator accountFormValidator;
 
     @InitBinder
     public void myInitBinder(WebDataBinder dataBinder) {
@@ -48,6 +54,10 @@ public class AdminController {
         if (target.getClass() == ProductForm.class) {
             dataBinder.setValidator(productFormValidator);
         }
+        else if(target.getClass() == AccountForm.class) {
+            dataBinder.setValidator(accountFormValidator);
+        }
+
     }
 
     // GET: Show Login Page
@@ -55,6 +65,36 @@ public class AdminController {
     public String login(Model model) {
 
         return "login";
+    }
+
+    // GET: Show Register Page
+    @RequestMapping(value = {"/admin/register"}, method = RequestMethod.GET)
+    public String retrieveAccountForm(Model model) {
+        model.addAttribute("accountForm", new AccountForm());
+        return "register";
+    }
+
+    // POST: Save Account From Register Page
+    @RequestMapping(value = {"/admin/register"}, method = RequestMethod.POST)
+    public String registerAccount(Model model, //
+                              @ModelAttribute("accountForm") @Validated AccountForm accountForm, //
+                              BindingResult result, //
+                              final RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            return "register";
+        }
+        try {
+            accountDAO.save(accountForm);
+        } catch (Exception e) {
+            Throwable rootCause = ExceptionUtils.getRootCause(e);
+            String message = rootCause.getMessage();
+            model.addAttribute("errorMessage", message);
+            // Show register form.
+            return "register";
+        }
+
+        return "redirect:/admin/login";
     }
 
     @RequestMapping(value = {"/admin/orderList"}, method = RequestMethod.GET)
@@ -154,6 +194,15 @@ public class AdminController {
 
     @RequestMapping(value = {"/admin/fulfillOrder"}, method = RequestMethod.GET)
     public String fulfillOrder(Model model, @RequestParam("orderId") String orderId) {
+        return handleOrderStatusChange(orderId, 1);
+    }
+
+    @RequestMapping(value = {"/admin/cancelOrder"}, method = RequestMethod.GET)
+    public String cancelOrder(Model model, @RequestParam("orderId") String orderId) {
+        return handleOrderStatusChange(orderId, 2);
+    }
+
+    private String handleOrderStatusChange(String orderId, int orderStatusToBeUpdated) {
         OrderInfo orderInfo = null;
         if (orderId != null) {
             orderInfo = this.orderDAO.getOrderInfo(orderId);
@@ -161,7 +210,7 @@ public class AdminController {
         if (orderInfo == null) {
             return "redirect:/admin/orderList";
         }
-        this.orderDAO.fulfillOrder(orderId);
+        this.orderDAO.fulfillOrder(orderId, orderStatusToBeUpdated);
 
         return "redirect:/admin/orderList";
     }
