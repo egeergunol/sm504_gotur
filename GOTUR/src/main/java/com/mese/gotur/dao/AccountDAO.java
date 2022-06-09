@@ -34,6 +34,7 @@ public class AccountDAO {
             account = new Account();
             account.setUserName(accountForm.getUserName());
             account.setEncryptedPassword(encoder.encode(accountForm.getPassword()));
+            account.setActive(true);
             account.setUserRole(accountForm.getUserRole());
             session.persist(account);
         }

@@ -30,7 +30,7 @@ public class AccountFormValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.accountForm.password");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "rePassword", "NotEmpty.accountForm.rePassword");
 
-        if(accountForm.getPassword().equals(accountForm.getRePassword())) {
+        if(!accountForm.getPassword().equals(accountForm.getRePassword())) {
             errors.rejectValue("rePassword", "Match.accountForm.password");
         }
 

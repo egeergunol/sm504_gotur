@@ -73,7 +73,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 ">
+        <div class="col-lg-12">
             <table class="table table-bordered">
                 <tr>
                     <th>Product Code</th>
@@ -81,10 +81,6 @@
                     <th>Quantity</th>
                     <th>Price</th>
                     <th>Amount</th>
-
-                    <th:block sec:authorize="hasAnyRole('ROLE_STORE_MANAGER','ROLE_COURIER')">
-                        <th>Operation</th>
-                    </th:block>
                 </tr>
                 <tr th:each="orderDetailInfo : ${orderInfo.details}">
                     <td th:utext="${orderDetailInfo.productCode}"></td>
@@ -92,21 +88,53 @@
                     <td th:utext="${orderDetailInfo.quantity}"></td>
                     <td th:utext="${#numbers.formatDecimal(orderDetailInfo.unitPrice,2,2,'COMMA')}"></td>
                     <td th:utext="${#numbers.formatDecimal(orderDetailInfo.amount,2,2,'COMMA')}"></td>
-                    <th:block th:if="${orderInfo.orderStatus == 0}" sec:authorize="hasAnyRole('ROLE_STORE_MANAGER','ROLE_COURIER')">
-                        <td>
-                            <a class="navi-item btn btn-dark"
-                               th:href="@{|/admin/fulfillOrder?orderId=${orderInfo.id}|}">
-                                Fulfill Order
-                            </a>
-                        </td>
-                    </th:block>
-                    <th:block th:if="${orderInfo.orderStatus == 1}" sec:authorize="hasAnyRole('ROLE_STORE_MANAGER','ROLE_COURIER')">
-                        <td>
-                        Already Fulfilled
-                        </td>
-                    </th:block>
                 </tr>
             </table>
+            <th:block th:if="${orderInfo.orderStatus == 0}" sec:authorize="hasAnyRole('ROLE_STORE_MANAGER','ROLE_COURIER')">
+                <div class="row">
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                    <div class="col-lg-4" style="text-align: center;">
+                    <a class="navi-item btn btn-dark"
+                       th:href="@{|/admin/fulfillOrder?orderId=${orderInfo.id}|}">
+                        Fulfill Order
+                    </a>
+                    </div>
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                </div>
+            </th:block>
+            <th:block th:if="${orderInfo.orderStatus == 1}" sec:authorize="hasAnyRole('ROLE_STORE_MANAGER','ROLE_COURIER')">
+                <div class="row">
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                    <div class="box btn-warn col-lg-4">
+                        <p style="text-align: center; margin: revert!important;"> Already Fulfilled </p>
+                    </div>
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                </div>
+            </th:block>
+            <th:block th:if="${orderInfo.orderStatus == 0}" sec:authorize="hasAnyRole('ROLE_CUSTOMER')">
+                <div class="row">
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                    <div class="col-lg-4" style="text-align: center;">
+                        <a class="navi-item btn btn-dark"
+                           th:href="@{|/admin/cancelOrder?orderId=${orderInfo.id}|}">
+                            Cancel Order
+                        </a>
+                    </div>
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                </div>
+            </th:block>
+            <th:block th:if="${orderInfo.orderStatus == 1}" sec:authorize="hasAnyRole('ROLE_CUSTOMER')">
+                <div class="row">
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                    <div class="col-lg-4" style="text-align: center;">
+                        <a class="navi-item btn btn-dark"
+                           th:href="@{|/admin/cancelOrder?orderId=${orderInfo.id}|}">
+                            Return Order
+                        </a>
+                    </div>
+                    <div class="col-lg-4"><p style="text-align: center;"> <br> </p></div>
+                </div>
+            </th:block>
         </div>
     </div>
 </div>

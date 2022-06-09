@@ -47,7 +47,12 @@
                     <td th:utext="${orderInfo.customerEmail}"></td>
                     <td style="color:red;"><th:block th:utext="${#numbers.formatDecimal(orderInfo.totalAmount,2,2,'COMMA')}"/>₺</td>
                     <td><a th:href="@{|/admin/order?orderId=${orderInfo.id}|}">View</a></td>
-                    <td><span th:text="${orderInfo.orderStatus} ? 'FULFILLED' : 'ON THE WAY'"></span></td>
+                    <td th:switch="true">
+                        <span th:case="${orderInfo.orderStatus}  == 0"> ON THE WAY</span>
+                        <span th:case="${orderInfo.orderStatus}  == 1"> FULFILLED</span>
+                        <span th:case="${orderInfo.orderStatus}  == 2"> CANCELLED</span>
+                    </td>
+<!--                    <td><span th:text="${orderInfo.orderStatus} ? 'FULFILLED' : 'ON THE WAY'"></span></td>-->
                 </tr>
                 </tbody>
             </table>

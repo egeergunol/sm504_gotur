@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GOTUR</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
+    <th:block th:include="/_header"></th:block>
+</head>
+<body>
+
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 offset-3">
+
+            <div class="bd-example">
+                <h3>Enter User Information</h3>
+                <form method="POST" th:object="${accountForm}" th:action="@{/admin/register}">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">UserName</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" th:field="*{userName}">
+                        <span class="error-message"
+                              th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">..</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputEmail1" th:field="*{password}">
+                        <span class="error-message"
+                              th:if="${#fields.hasErrors('password')}" th:errors="*{password}">..</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">ReEnterPassword</label>
+                        <input type="password" class="form-control" id="exampleInputEmail1" th:field="*{rePassword}">
+                        <span class="error-message"
+                              th:if="${#fields.hasErrors('rePassword')}" th:errors="*{rePassword}">..</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Address</label>
+                        <select th:field="*{userRole}" class="form-control">
+                            <option value="ROLE_STORE_MANAGER">Store Manager</option>
+                            <option value="ROLE_CUSTOMER">Customer</option>
+                            <option value="ROLE_COURIER">Courier</option>
+                        </select>
+                    </div>
+
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                    <input type="reset" class="btn btn-outline-primary"
+                           value="Reset"/>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ------------------------------container end---------------------------------- -->
+
+
+<th:block th:include="/_footer"></th:block>
+
+</body>
+</html></html>
